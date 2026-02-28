@@ -10,9 +10,7 @@ cc = meson.get_compiler('c')
 dxvk_is_msvc = cpp.get_argument_syntax() == 'msvc'
 
 compiler_args = [
-  '-msse',
-  '-msse2',
-  '-msse3',
+  '-march=native',
   '-mfpmath=sse',
   '-Wimplicit-fallthrough',
   # gcc
