@@ -20,7 +20,6 @@
 namespace dxvk {
 
   D3D9FixedFunctionOptions::D3D9FixedFunctionOptions(const D3D9Options* options) {
-    invariantPosition = options->invariantPosition;
     forceSampleRateShading = options->forceSampleRateShading;
   }
 
@@ -1853,8 +1852,7 @@ namespace dxvk {
 
     // Declare Outputs
     m_vs.out.POSITION = declareIO(false, DxsoSemantic{ DxsoUsage::Position, 0 }, spv::BuiltInPosition);
-    if (m_options.invariantPosition)
-      m_module.decorate(m_vs.out.POSITION, spv::DecorationInvariant);
+    m_module.decorate(m_vs.out.POSITION, spv::DecorationInvariant);
 
     m_vs.out.POINTSIZE = declareIO(false, DxsoSemantic{ DxsoUsage::PointSize, 0 }, spv::BuiltInPointSize);
 
@@ -2698,7 +2696,7 @@ namespace dxvk {
           D3D9DeviceEx*         pDevice,
     const D3D9FFShaderKeyVS&    Key) {
     Sha1Hash hash = Sha1Hash::compute(&Key, sizeof(Key));
-    DxvkShaderKey shaderKey = { VK_SHADER_STAGE_VERTEX_BIT, hash };
+    DxvkShaderHash shaderKey(VK_SHADER_STAGE_VERTEX_BIT,  0u, hash.digest(), hash.digestLength());
 
     std::string name = str::format("FF_", shaderKey.toString());
 
@@ -2719,7 +2717,7 @@ namespace dxvk {
           D3D9DeviceEx*         pDevice,
     const D3D9FFShaderKeyFS&    Key) {
     Sha1Hash hash = Sha1Hash::compute(&Key, sizeof(Key));
-    DxvkShaderKey shaderKey = { VK_SHADER_STAGE_FRAGMENT_BIT, hash };
+    DxvkShaderHash shaderKey(VK_SHADER_STAGE_FRAGMENT_BIT, 0u, hash.digest(), hash.digestLength());
 
     std::string name = str::format("FF_", shaderKey.toString());
 
